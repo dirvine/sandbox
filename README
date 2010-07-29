@@ -1,0 +1,5 @@
+to build 
+1: cd build
+2: cmake ../ (or cmake ..\ in windows)
+
+Then type make 
