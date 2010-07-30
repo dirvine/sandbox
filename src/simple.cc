@@ -10,7 +10,8 @@ castor::relation child(castor::lref<std::string> c,
 castor::relation gender(castor::lref<std::string> p,
                         castor::lref<std::string> g) {
   return eq(p, "William") && eq(g, "Male")
-  ||     eq(p, "David") && eq(g, "Male");
+  ||     eq(p, "David") && eq(g, "Male")
+  ||     eq(p, "David")   && eq(g,"SuperMale");
 }
 
 castor::relation father(castor::lref<std::string> f,
@@ -19,22 +20,27 @@ castor::relation father(castor::lref<std::string> f,
 }
 
 int main(int argc, char **argv) {
-  castor::relation IsSamMail = gender("David", "Male");
+  castor::relation IsDavidMail = gender("David", "Male");
   castor::relation IsFather = father("William", "David");
-
-if (IsSamMail()) {
+// Simple test for truth 
+if (IsDavidMail()) {
   std::cout << "David is, in fact, male, of course " << std::endl;
 } else {
   std::cout << "David is not male" << std::endl;
 }
-
+// And again 
 if (IsFather()) {
   std::cout << "William is David's Father" << std::endl;
 } else {
   std::cout << "william is not David's father" << std::endl;
 }
-
+// empty logical reference here - filled in when we ask for it
+// interestingly this overwrites the pointer target continually
+// so it's way faster than iterating
 castor::lref<std::string> g;
-castor::relation SamsGender = gender("Sam", g);
+castor::relation DavidsGender = gender("David", g);
+while (DavidsGender())
+  std::cout << "David is " << *g << std::endl;
+
 
 }

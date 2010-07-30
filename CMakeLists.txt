@@ -2,5 +2,6 @@ cmake_minimum_required(VERSION 2.6)
 project(CastorTest)
 set(CMAKE_CXX_FLAGS "-g -Wall -Wextra -pedantic ")
 include_directories(${CastorTest_SOURCE_DIR}/src)
-add_executable(CastorTest ${CastorTest_SOURCE_DIR}/src/main.cpp)
+add_executable(CastorTest ${CastorTest_SOURCE_DIR}/src/simple.cc)
+add_executable(VaultExample ${CastorTest_SOURCE_DIR}/src/vault.cc)
 
