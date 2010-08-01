@@ -20,13 +20,13 @@ castor::relation father(castor::lref<std::string> f,
 }
 
 int main(int argc, char **argv) {
-  castor::relation IsDavidMail = gender("David", "Male");
+  castor::relation IsDavidMale = gender("David", "Male");
   castor::relation IsFather = father("William", "David");
 // Simple test for truth 
-if (IsDavidMail()) {
+if (IsDavidMale()) {
   std::cout << "David is, in fact, male, of course " << std::endl;
 } else {
-  std::cout << "David is not male" << std::endl;
+  std::cout << "David is not male, there is an error !! " << std::endl;
 }
 // And again 
 if (IsFather()) {

@@ -41,19 +41,25 @@ value_in_question
 
 ******************
 //Golden rules
-1: Network
-2: Data
-3: Self
+1: Network [ protect at all costs !!]
+2: Data [ protect data over self ]
+3: Self [ protect self last, i.e. we are expendable for the greater good ]
 
 // Routing table wide Alert for very bad nodes !!! save network, all attack !!
-// With LP we can go traverse a lsit 100 times faster than stl so go through all
+// With LP we can go traverse a list 100 times faster than stl so go through all
 // routing table every time unless we can improve algorithm (which we can)
 */
 // In SentiNet catch add/remove Kad nodes
 
+// For kademlia
 castor::relation rank(castor::lref<std::string> node,
                     castor::lref<boost::uint32_t> rank);
+                    
 
+
+
+// For SentiNet
+                      
 castor::relation first_seen(castor::lref<std::string> node,
                             castor::lref<boost::uint32_t> time);
 
