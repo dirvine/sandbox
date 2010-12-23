@@ -6,6 +6,7 @@
 #define CASTOR_CUT_H 1
 
 #include "relation.h"
+#include "coroutine.h"
 
 namespace castor {
 

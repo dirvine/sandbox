@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include "helpers.h"
+#include "coroutine.h"
 
 namespace castor {
 

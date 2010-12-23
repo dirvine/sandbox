@@ -7,6 +7,7 @@
 
 #include "lref.h"
 #include "relation.h"
+#include "coroutine.h"
 #include "eq.h"
 #include "helpers.h"
 #include "functional.h"
@@ -888,20 +889,33 @@ relation insert(lref<typename Seq::value_type> value_, lref<typename Seq::iterat
 #endif
 }
 
+template<class Seq>
+struct insert_seq_r: Coroutine {
+    lref<typename Seq::iterator> valuesB_, valuesE_,  b_, e_, n;
+    lref<Seq> insertedSeq;
+    relation r;
+    insert_seq_r(lref<typename Seq::iterator>& valuesB_, lref<typename Seq::iterator>& valuesE_, lref<typename Seq::iterator>& b_, lref<typename Seq::iterator>& e_, lref<Seq>& insertedSeq) 
+        : valuesB_(valuesB_), valuesE_(valuesE_),  b_(b_), e_(e_), insertedSeq(insertedSeq), r(False())
+    { }
+
+    bool operator() (void) {
+        co_begin();
+        for( n=b_;*n!=*e_;++(*n) ) {
+            r= sequence(insertedSeq)(*b_,*n)(*valuesB_, *valuesE_)(*n,*e_);
+            while(r()) 
+                co_yield(true);
+        }
+        r = sequence(insertedSeq)(*b_,*e_)(*valuesB_, *valuesE_);
+        while(r()) 
+            co_yield(true);
+        co_end();
+    }
+};
+
 // inserts a sequence into a sequence
 template<class Seq>
 relation insert_seq(lref<typename Seq::iterator> valuesB_, lref<typename Seq::iterator> valuesE_, lref<typename Seq::iterator> b_, lref<typename Seq::iterator> e_, lref<Seq>& insertedSeq) {
-	lref<typename Seq::value_type> v;
-	lref<typename Seq::iterator> n;
-	lref<Seq> tmp;
-#ifdef __BCPLUSPLUS__
-	relation (*self)(lref<typename Seq::iterator> , lref<typename Seq::iterator> , lref<typename Seq::iterator> , lref<typename Seq::iterator> , lref<Seq>& ) = &insert_seq<Seq>;
-	return   sequence(insertedSeq)(valuesB_,valuesE_)(b_,e_)
-		  || predicate(b_!=e_) && castor::next(b_,n) && recurse(self,valuesB_,valuesE_,n,e_,tmp) && dereference(b_,v) && sequence(insertedSeq)(v)(tmp);
-#else
-	return   sequence(insertedSeq)(valuesB_,valuesE_)(b_,e_)
-		  || predicate(b_!=e_) && castor::next(b_,n) && recurse(&insert_seq<Seq>,valuesB_,valuesE_,n,e_,tmp) && dereference(b_,v) && sequence(insertedSeq)(v)(tmp);
-#endif
+    return insert_seq_r<Seq>(valuesB_, valuesE_,  b_, e_, insertedSeq);
 }
 
 //----------------------------------------------------------------------
@@ -1068,7 +1082,7 @@ public:
                 state=END;
                 return compareItems();
             }
-            l=constructCollection();
+            l.set_ptr(constructCollection(), true);
             state=LIST_ASSIGNED;
             return true;
         case LIST_ASSIGNED:
@@ -1080,28 +1094,28 @@ public:
         }
     }
 private:
-    Seq constructCollection() {
-        Seq result;
+    Seq* constructCollection() {
+        Seq* result = new Seq ();
         for(typename std::list<elemKind>::iterator i=history.begin(); i!= history.end(); ++i) {
             switch(*i) {
             case VALUE:
-                result.insert(result.end(), r_Values.front());
+                result->insert(result->end(), r_Values.front());
                 r_Values.pop_front();
                 break;
             case REF:
-                result.insert(result.end(), *(r_Refs.front()));
+                result->insert(result->end(), *(r_Refs.front()));
                 r_Refs.pop_front();
                 break;
             case REF_PAIR: {
                 LrefIter b = r_LrefPairs.front().first, e = r_LrefPairs.front().second;
-                result.insert(result.end(), *b, *e); //std::copy(*b, *e, inserter(result,result.end()) );
+                result->insert(result->end(), *b, *e); //std::copy(*b, *e, inserter(result,result.end()) );
                 r_LrefPairs.pop_front();
                 break;
             }
             default: { // ==REF_COLLECTION
                 lref<Seq> items = r_refLists.front();
+                result->insert(result->end(), (*items).begin(), (*items).end() ); // std::copy((*items).begin(), (*items).end(), inserter(result,result.end()) );
                 r_refLists.pop_front();
-                result.insert(result.end(), (*items).begin(), (*items).end() ); // std::copy((*items).begin(), (*items).end(), inserter(result,result.end()) );
                 break;
             }
             }// switch

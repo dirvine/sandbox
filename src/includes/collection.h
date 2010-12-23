@@ -5,7 +5,7 @@
 #if !defined CASTOR_COLLECTION_H
 #define CASTOR_COLLECTION_H 1
 
-//#include "coroutine.h"
+#include "coroutine.h"
 #include "relation.h"
 #include "lref.h"
 #include "utils.h"

@@ -11,6 +11,7 @@
 #include "relation.h"
 #include "helpers.h"
 #include <cstring>
+#include <string>
 namespace castor {
 
 template<typename L, typename R, typename Cmp=::castor::detail::None>
@@ -750,6 +751,10 @@ Eq_mem_r<L, Obj, MemberT> eq_mem(lref<L> l, lref<Obj>& obj_, MemberT Obj2::* mem
     return Eq_mem_r<L, Obj, MemberT>(l, obj_, mem);
 }
 
+template<typename Obj, typename Obj2, typename MemberT> inline
+Eq_mem_r<std::string, Obj, MemberT> eq_mem(const char* l, lref<Obj>& obj_, MemberT Obj2::* mem) {
+    return Eq_mem_r<std::string, Obj, MemberT>(lref<std::string>(l), obj_, mem);
+}
 
 } // namespace castor
 

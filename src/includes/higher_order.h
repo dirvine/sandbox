@@ -13,7 +13,7 @@ namespace castor {
 // zip(l,r) - succeeds each time l() and r() succeed
 //-------------------------------------------------
 
-template<typename L, typename R>
+template<class L, class R>
 class Zip_r : public Coroutine {
 	L l;
 	R r;
@@ -37,11 +37,10 @@ public:
 	}
 };
 
-template<typename L, typename R>
+template<class L, class R>
 Zip_r<L,R> zip(const L& l, const R& r) {
 	return Zip_r<L,R>(l,r);
 }
-
 
 } // namespace castor
 #endif

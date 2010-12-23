@@ -19,6 +19,7 @@ castor::relation father(castor::lref<std::string> f,
   return gender(f, "Male") && child(c, f);
 }
 
+
 int main(int argc, char **argv) {
   castor::relation IsDavidMale = gender("David", "Male");
   castor::relation IsFather = father("William", "David");

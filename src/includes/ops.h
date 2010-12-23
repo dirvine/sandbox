@@ -8,6 +8,7 @@
 #include "relation.h"
 #include "lref.h"
 #include "workaround.h"
+#include "coroutine.h"
 
 namespace castor {
 

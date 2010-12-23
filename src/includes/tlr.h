@@ -321,7 +321,7 @@ Reverse_tlr<T> reverse(lref<T>& obj) {
 
 
 //-------------------------------------------------
-// group_by(i, selector).then(..).then(..) - group seq using cond into (key,grp)
+// group_by(i, selector).then(..).then(..).item_order(..) - group seq using cond into (key,grp)
 //-------------------------------------------------
 
 namespace detail {
@@ -928,7 +928,7 @@ public:
 };
 
 //-------------------------------------------------
-// group_by().then() - Multilevel grouping of objects
+// group_by().then().then().item_order() - Multilevel grouping of objects
 // For use with >>= operator
 // throws InvalidArg() if obj is initialized at the time evaluation
 // Concept: T: is an integral type
@@ -938,7 +938,7 @@ GroupBy<Item,group<K,V>,K,V,detail::FuncList<Sel,detail::None>, std::less<K> > i
 group_by(lref<Item>& i_, Sel keySelector, lref<group<K,V> >& g) {
 	using namespace detail;
 	typedef typename return_type<Sel>::result_type ret_type;
-	ASSERT_SAME_TYPE(ret_type,K,"Group's key type does not match Selector's return type");
+	//ASSERT_SAME_TYPE(ret_type,K,"Group's key type does not match Selector's return type");
 	return GroupBy<Item,group<K,V>,K,V,FuncList<Sel,None>,std::less<K> >(i_,FuncList<Sel,None>(keySelector),g, std::less<K>());
 }
 
@@ -949,10 +949,38 @@ GroupBy<Item,group<K,V>, K,V,detail::FuncList<Sel,detail::None>,KCmp> inline
 group_by(lref<Item>& i_, Sel keySelector, lref<group<K,V> >& g, KCmp keyCmp) {
 	using namespace detail;
 	typedef typename return_type<Sel>::result_type ret_type;
-	ASSERT_SAME_TYPE(ret_type,K,"Group's key type does not match Selector's return type");
+	//ASSERT_SAME_TYPE(ret_type,K,"Group's key type does not match Selector's return type");
 	return GroupBy<Item,group<K,V>,K,V,FuncList<Sel,None>,KCmp>(i_,FuncList<Sel,None>(keySelector),g,keyCmp);
 }
 
+
+//-------------------------------------------------
+// skip(n) - Skip first n solutions
+//-------------------------------------------------
+
+template<class Integral>
+class Skip_tlr : public Coroutine {
+	Integral n;
+public:
+	Skip_tlr (const Integral& n) : n(n)
+	{ }
+
+	bool operator()(relation& lhs) {
+		co_begin();
+        for( ; effective_value(n)>0; --effective_value(n) ) {
+            if(!lhs())
+                co_return(false);
+        }
+        while(lhs())
+            co_yield(true);
+		co_end();
+	}
+};
+
+template<class Integral>
+Skip_tlr<Integral> skip(Integral times) {
+    return Skip_tlr<Integral>(times);
+}
 
 } // namespace castor
 
