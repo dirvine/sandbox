@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <boost/cstdint.hpp>
+#include <boost/function.hpp>
 #include "castor.h"
 /*
 *****facts *****
@@ -36,9 +37,6 @@ value_in_question
 
 **** Rules *****
 
-
-
-
 ******************
 //Golden rules
 1: Network [ protect at all costs !!]
@@ -54,30 +52,62 @@ value_in_question
 // For kademlia
 castor::relation rank(castor::lref<std::string> node,
                     castor::lref<boost::uint32_t> rank);
-                    
-
-
+namespace cs = castor;
 
 // For SentiNet
-                      
+
 castor::relation first_seen(castor::lref<std::string> node,
                             castor::lref<boost::uint32_t> time);
-
 castor::relation already_used(castor::lref<std::string> node,
                               castor::lref<boost::uint32_t> stored);
-
 castor::relation send_bandwidth(castor::lref<std::string> node,
                                 castor::lref<boost::uint32_t> send_bw);
-                                
 castor::relation receive_bandwidth(castor::lref<std::string> node,
-                      castor::lref<boost::uint32_t> receive_bw);
-                    
-castor::relation rtt(castor::lref<std::string> node,
-                      castor::lref<boost::uint32_t> r_t_t);
+                                  castor::lref<boost::uint32_t> receive_bw);
+castor::relation rtt(cs::lref<std::string> node,
+                     cs::lref<boost::uint32_t> r_t_t);
+struct Ant {
+  Ant(){}
+  ~Ant(){}
+public:
 
 
-                      
+};
+
+enum AntType{kSoldier, kForger, kCollector, kCleaner, kSleeper};
+enum AntFunction{kProtect, kFindFood, kCarryFood, kClean, kSleep};
+
+cs::relation DefaultFunction(cs::lref<AntType> t, cs::lref<AntFunction> f) {
+  return cs::eq(t, kSoldier) && cs::eq(f, kProtect)
+  ||     cs::eq(t, kForger) && cs::eq(f, kFindFood)
+  ||     cs::eq(t, kCollector) && cs::eq(f, kCarryFood)
+  ||     cs::eq(t,kCleaner) && cs::eq(f, kClean)
+  ||     cs::eq(t,kSleeper) && cs::eq(f, kSleep);
+}
+
+void pythagorus() {
+    // Print all Pythagoras triplets less
+    // than x
+    cs::lref<int> x,y,z;
+    int max=50;
+    cs::relation pythTriplets = cs::range<int>(x,1,max) && cs::range<int>(y,1,max)
+                  && cs::range<int>(z,1,max) && (cs::predicate(x*x+y*y==z*z)
+                  || cs::predicate(z*z+y*y==x*x));
+    while(pythTriplets())
+        std::cout << *x << "," << *y << ","<< *z << "\n";
+}
+
+
+cs::Disjunctions TestFunc() {
+
+}
+
+int CreateAnt() {
+  int t = 0;
+  return t;
+}
 
 int main(int argc, char **argv) {
-
+ pythagorus();
+  return 0;
 }
