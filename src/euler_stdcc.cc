@@ -15,7 +15,6 @@
 #include <vector>
 #include <set>
 #include <string.h>
-#include "gmp.h"
 #include "boost/cstdint.hpp"
 #include "boost/lexical_cast.hpp"
 #include "boost/math/special_functions/factorials.hpp"
@@ -168,12 +167,10 @@ size_t prob7() {
 //Find the greatest product of five consecutive digits in the 1000-digit number.
 size_t prob8() {
   std::string str = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450";
-  size_t con = 0;
   size_t current = 0;
   size_t count = 0;
   size_t last = 0;
   size_t big = 0;
-  size_t last_big = 0;
   for(auto it = str.begin(); it != str.end() - 5; ++it) {
     current = boost::lexical_cast<size_t>(*(it));
     big = boost::lexical_cast<size_t>(str[count]) *
@@ -202,14 +199,13 @@ size_t prob9() {
     for (size_t b = a + 1; b <= num/2; b++) {
       size_t c = num - a - b;
       if ( c > 0 && (a*a + b*b == c*c) ) {
-        printf("a=%d, b=%d, c=%d\n",a,b,c);
+        std::cout << "a= " << a << " b= " << b << " c= " << c << std::endl;
         return a*b*c;
       }
     }
   }
   return 1;
 }
-
 
 //Find the sum of all the primes below two million.
 // Aha seive Eratosthenes  problem
@@ -264,8 +260,8 @@ uint32_t prob11() {
   uint32_t diag_left_prod = 0;
   uint32_t diag_right_prod = 0;
   
-  for (int row = 0; row < matrix.size(); ++row) {
-    for (int col = 0; col < matrix[col].size(); ++col) {
+  for (uint row = 0; row < matrix.size(); ++row) {
+    for (uint col = 0; col < matrix[col].size(); ++col) {
       if (row < 17)
         row_prod = matrix[row][col] * matrix[row+1][col] *
         matrix[row+2][col] * matrix[row+3][col];
@@ -306,7 +302,7 @@ uint32_t prob12() {
       
       triangle_num = triangle_num + i;
     
-    for (int i = 1; i*i <= triangle_num; ++i)
+    for (uint i = 1; i*i <= triangle_num; ++i)
       if (triangle_num % i == 0)
         num_divisors+=2;
       // std::cout << "number: " << triangle_num << " divisors : " << num_divisors << std::endl;
@@ -531,19 +527,21 @@ size_t prob18() {
     { 63, 66, 04, 68, 89, 53, 67, 30, 73, 16, 69, 87, 40, 31 },
     { 4,  62, 98, 27, 23, 9,  70, 98, 73, 93, 38, 53, 60,  4, 23 }
   };
-  for(int i = 0; i  < triangle.size(); ++i) {
-    for (int j = 0; j < triangle[i].size(); ++j ) {
+  for(uint i = 0; i  < triangle.size(); ++i) {
+    for (uint j = 0; j < triangle[i].size(); ++j ) {
       
     }
   }
+  return 0;
 }
 
 int prob19() {
-  
+
+  return 0;
 }
 
 size_t prob20() {
-  int i, j, k, l, sum;
+  int i, j, k;
   int n = 100;
   int factorial[10000];
   
@@ -573,30 +571,30 @@ size_t prob20() {
 
 // #######################################################################
 // ################## MAIN ################################################
-int main(int argc, char **argv) {
+int main() {
   static_assert(std::numeric_limits<u_int>::digits >= 31, "Int is not at least 32 bits");
   static_assert(std::numeric_limits<unsigned long>::digits >= 32, "Long is not at least 32 bits");
   static_assert(std::numeric_limits<unsigned long long>::digits >= 64, "Long Long is not at least 64 bits");
   static_assert(std::numeric_limits<uint64_t>::digits >= 64, "Int_64t is not at least 64 bits");
   static_assert(std::numeric_limits<uint32_t>::digits >= 32, "Int_32t is not at least 16 bits");
-  //     std::cout << "Prob 1: " << prob1() << std::endl;
-  //     std::cout << "Prob 2: " << prob2() << std::endl;
-  //     std::cout << "Prob 3: " << prob3() << std::endl;
-  //     std::cout << "Prob 4: " << prob4() << std::endl;
-  //     std::cout << "Prob 5: " << prob5() << std::endl;
-  //      std::cout << "Prob 6: " << prob6() << std::endl;
-  //     std::cout << "Prob 7: " << prob7() << std::endl;
-  //     std::cout << "Prob 8: " << prob8() << std::endl;
-  //   std::cout << "Prob 9: " << prob9() << std::endl;
-  //    std::cout << "Prob 10: " << prob10() << std::endl;
-  //   std::cout << "Prob 11: " << prob11() << std::endl;
-  // std::cout << "Prob 12: " << prob12() << std::endl;
-  //  std::cout << "Prob 13: " << prob13() << std::endl;
-  //  std::cout << "Prob 14: " << prob14() << std::endl;
-  //  std::cout << "Prob 15: " << prob15() << std::endl;
-  //   std::cout << "Prob 16: " << prob16() << std::endl;
-  //std::cout << "Prob 18: " << prob18() << std::endl;
-  //  std::cout << "Prob 20: " << prob20() << std::endl;
+  std::cout << "Prob 1: " << prob1() << std::endl;
+  std::cout << "Prob 2: " << prob2() << std::endl;
+  std::cout << "Prob 3: " << prob3() << std::endl;
+  std::cout << "Prob 4: " << prob4() << std::endl;
+  std::cout << "Prob 5: " << prob5() << std::endl;
+  std::cout << "Prob 6: " << prob6() << std::endl;
+  std::cout << "Prob 7: " << prob7() << std::endl;
+  std::cout << "Prob 8: " << prob8() << std::endl;
+  std::cout << "Prob 9: " << prob9() << std::endl;
+  std::cout << "Prob 10: " << prob10() << std::endl;
+  std::cout << "Prob 11: " << prob11() << std::endl;
+  std::cout << "Prob 12: " << prob12() << std::endl;
+  std::cout << "Prob 13: " << prob13() << std::endl;
+  std::cout << "Prob 14: " << prob14() << std::endl;
+  std::cout << "Prob 15: " << prob15() << std::endl;
+  std::cout << "Prob 16: " << prob16() << std::endl;
+  std::cout << "Prob 18: " << prob18() << std::endl;
+  std::cout << "Prob 20: " << prob20() << std::endl;
   int a;
   std::move(a);
   std::bitset<10> Bit;
