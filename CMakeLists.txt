@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(CastorTest)
+set(CMAKE_BUILD_TYPE="Debug")
 set(CMAKE_CXX_FLAGS "-g -std=c++11 -stdlib=libc++ -Wall -Wextra -pedantic ")
 set(CMAKE_EXE_LINKER_FLAGS "-lc++abi")
 include_directories(${CastorTest_SOURCE_DIR}/src)
