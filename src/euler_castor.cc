@@ -1,7 +1,6 @@
 #include "castor.h"
 #include "iostream"
 #include "stdint.h"
-#include <boost/function.hpp>
 
 
 namespace cs = castor;

@@ -14,14 +14,10 @@
 #include <numeric>
 #include <vector>
 #include <set>
-#include <string.h>
-#include "boost/cstdint.hpp"
-#include "boost/lexical_cast.hpp"
-#include "boost/math/special_functions/factorials.hpp"
 
 // Helper functions
-bool IsPrime(boost::uint64_t test) {
-  for (boost::uint64_t i = 3;i*i <= test; i = 2+i)
+bool IsPrime(uint64_t test) {
+  for (uint64_t i = 3;i*i <= test; i = 2+i)
     if (test % i == 0)
       return false;
     return true;
@@ -78,10 +74,10 @@ unsigned long prob2() {
 
 // The prime factors of 13195 are 5, 7, 13 and 29.
 // What is the largest prime factor of the number 600851475143 ?
-boost::uint64_t prob3() {
-  boost::uint64_t x, y;
-  boost::uint64_t z = 600851475143ULL;
-  for (boost::uint64_t i = 11; i*i <= z; i = i + 2) {
+uint64_t prob3() {
+  uint64_t x, y;
+  uint64_t z = 600851475143ULL;
+  for (uint64_t i = 11; i*i <= z; i = i + 2) {
     if ((z % i == 0) && (IsPrime(i))) {
       y = z / i;
       if (IsPrime(y) && (y>i)) {
@@ -172,12 +168,12 @@ size_t prob8() {
   size_t last = 0;
   size_t big = 0;
   for(auto it = str.begin(); it != str.end() - 5; ++it) {
-    current = boost::lexical_cast<size_t>(*(it));
-    big = boost::lexical_cast<size_t>(str[count]) *
-    boost::lexical_cast<size_t>(str[count+ 1]) *
-    boost::lexical_cast<size_t>(str[count + 2]) *
-    boost::lexical_cast<size_t>(str[count + 3]) *
-    boost::lexical_cast<size_t>(str[count + 4]);
+    current = *(it);
+    big = str[count] *
+    str[count + 1] *
+    str[count + 2] *
+    str[count + 3] *
+    str[count + 4];
     if (big > last)
       last = big;
     std::cout << last << std::endl;
@@ -424,9 +420,9 @@ uint64_t prob13() {
   for (int i = 0; i < 100; ++i) {
     this_line = "";
     for (int j = 0; j < 11 ; ++j) {
-      this_line += boost::lexical_cast<std::string>(numbers[i][j]);
+      this_line += std::to_string(numbers[i][j]);
     }
-    last_line += boost::lexical_cast<uint64_t>(this_line);
+    last_line += std::stoll(this_line);
     //    std::cout << this_line << " " << last_line << std::endl;
   }
   return last_line;
@@ -483,7 +479,7 @@ unsigned long long prob15() {
   unsigned long long grid[20][20];
   for (int i = 0; i < 20; ++i) {
     grid[20][i] = 1;
-    grid[i][20] = 1;
+    grid[i][19] = 1;
   }
   for (int i = 19; i>=0; --i)
     for(int j=19; j>=0; --j)
@@ -559,7 +555,7 @@ size_t prob20() {
       }
     }
   }
-  std::string out = boost::lexical_cast<std::string> (factorial);
+  std::string out = std::to_string(*factorial);
   // Get the sum of the digits
   
   size_t sum_of_digits = std::accumulate( out.begin(), out.end(), 0 );
