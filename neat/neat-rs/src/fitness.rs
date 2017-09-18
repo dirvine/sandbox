@@ -1,7 +1,6 @@
 use std::cmp::Ord;
 use std::cmp::Ordering;
 use std::ops::{Add, Div};
-use std::num::Zero;
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct Fitness(f64);
@@ -19,11 +18,6 @@ impl Fitness {
 
 impl Eq for Fitness {}
 
-impl Zero for Fitness {
-    fn zero() -> Self {
-        Fitness(0.0)
-    }
-}
 
 impl Add for Fitness {
     type Output = Fitness;

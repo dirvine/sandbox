@@ -1,5 +1,3 @@
-#![feature(iter_arith, zero_one)]
-
 extern crate rand;
 extern crate rayon;
 #[macro_use]

@@ -37,7 +37,7 @@ fn genome_to_graph(genome: &Genome<Neuron>) -> OwnedGraph<Neuron> {
         builder.add_edge(src_id, target_id, Closed01::new(weight.into()));
     });
 
-    return builder.graph();
+    builder.graph()
 }
 
 #[derive(Debug)]

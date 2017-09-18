@@ -1,17 +1,18 @@
-use std::fs::File;
-use std::io::Read;
-use std::fmt::Debug;
-use graph_neighbor_matching::{SimilarityMatrix, ScoreNorm, WeightedNodeColors, NodeColorWeight};
-use graph_neighbor_matching::graph::OwnedGraph;
-use graph_neighbor_matching::{Graph, Edges};
-use neat::genomes::acyclic_network::NodeType;
-use graph_io_gml::parse_gml;
+
 use asexp::Sexp;
+use closed01::Closed01;
+use graph_io_gml::parse_gml;
+use graph_neighbor_matching::{Edges, Graph};
+use graph_neighbor_matching::{NodeColorWeight, ScoreNorm, SimilarityMatrix, WeightedNodeColors};
+use graph_neighbor_matching::graph::OwnedGraph;
+use neat::genomes::acyclic_network::NodeType;
 use petgraph::Directed;
 use petgraph::Graph as PetGraph;
 use std::f32::{INFINITY, NEG_INFINITY};
-use closed01::Closed01;
+use std::fmt::Debug;
+use std::fs::File;
 use std::io::{self, Write};
+use std::io::Read;
 
 fn convert_weight(w: Option<&Sexp>) -> Option<f32> {
     match w {
@@ -56,12 +57,13 @@ pub fn load_graph<N, F>(graph_file: &str, convert_node_from_str: F) -> OwnedGrap
         graph_s
     };
 
-    let graph = parse_gml(&graph_s,
-                          &|node_sexp| -> Option<N> {
-                              node_sexp.and_then(|se| se.get_str().map(|s| convert_node_from_str(s)))
-                          },
-                          &convert_weight)
-                    .unwrap();
+    let graph =
+        parse_gml(&graph_s,
+                  &|node_sexp| -> Option<N> {
+                      node_sexp.and_then(|se| se.get_str().map(|s| convert_node_from_str(s)))
+                  },
+                  &convert_weight)
+            .unwrap();
     let edge_range = determine_edge_value_range(&graph);
     let graph = graph.map(|_, nw| nw.clone(),
                           |_, &ew| normalize_to_closed01(ew, edge_range));
@@ -75,20 +77,24 @@ pub fn write_gml(filename: &str, graph: &OwnedGraph<Neuron>) {
 }
 
 pub fn to_gml<W: Write>(wr: &mut W, graph: &OwnedGraph<Neuron>) -> io::Result<()> {
-    try!(writeln!(wr, "graph ["));
-    try!(writeln!(wr, "  directed 1"));
+    writeln!(wr, "graph [")?;
+    writeln!(wr, "  directed 1")?;
 
     for nidx in 0..graph.num_nodes() {
         let node_type: f32 = graph.node_value(nidx).node_color_weight();
-        try!(writeln!(wr, "  node [id {} weight {:.1}]", nidx, node_type));
+        writeln!(wr, "  node [id {} weight {:.1}]", nidx, node_type)?;
     }
     for nidx in 0..graph.num_nodes() {
         let edges = graph.out_edges_of(nidx);
         for eidx in 0..edges.num_edges() {
-            try!(writeln!(wr, "  edge [source {} target {} weight {:.2}]", nidx, edges.nth_edge(eidx).unwrap(), edges.nth_edge_weight(eidx).unwrap().get()));
+            writeln!(wr,
+                     "  edge [source {} target {} weight {:.2}]",
+                     nidx,
+                     edges.nth_edge(eidx).unwrap(),
+                     edges.nth_edge_weight(eidx).unwrap().get())?;
         }
     }
-    try!(writeln!(wr, "]"));
+    writeln!(wr, "]")?;
     Ok(())
 }
 
@@ -104,24 +110,24 @@ impl NodeCount {
         let mut cnt = NodeCount {
             inputs: 0,
             outputs: 0,
-            hidden: 0
+            hidden: 0,
         };
 
         for node in graph.nodes() {
-            match node.node_value() {
-                &Neuron::Input => {
+            match *node.node_value() {
+                Neuron::Input => {
                     cnt.inputs += 1;
                 }
-                &Neuron::Output => {
+                Neuron::Output => {
                     cnt.outputs += 1;
                 }
-                &Neuron::Hidden => {
+                Neuron::Hidden => {
                     cnt.hidden += 1;
                 }
             }
         }
 
-        return cnt;
+        cnt
     }
 }
 
@@ -134,7 +140,7 @@ pub enum Neuron {
 
 impl NodeColorWeight for Neuron {
     fn node_color_weight(&self) -> f32 {
-        match *self { 
+        match *self {
             Neuron::Input => 0.0,
             Neuron::Hidden => 1.0,
             Neuron::Output => 2.0,

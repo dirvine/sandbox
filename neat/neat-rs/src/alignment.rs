@@ -111,8 +111,8 @@ pub fn align_sorted_iterators<CMP, F, I>(a: I, b: I, cmp: CMP, mut f: F)
         let take;
 
         match (left_iter.peek(), right_iter.peek()) {
-            (Some(ref l), Some(ref r)) => {
-                take = match cmp(l, r) {
+            (Some(ref left), Some(ref right)) => {
+                take = match cmp(left, right) {
                     Ordering::Less => Take::OneLeft,
                     Ordering::Greater => Take::OneRight,
                     Ordering::Equal => Take::Both,

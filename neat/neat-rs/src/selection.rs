@@ -8,6 +8,7 @@ use rand::Rng;
 /// Instead we call `rng.gen_range()` k-times. The drawn items could be the same,
 /// but the probability is very low if `n` is high compared to `k`.
 #[inline]
+#[allow(unused)]
 pub fn tournament_selection_fast<R: Rng, F>(rng: &mut R,
                                             better_than: &F,
                                             n: usize,
@@ -28,10 +29,11 @@ pub fn tournament_selection_fast<R: Rng, F>(rng: &mut R,
         }
     }
 
-    return best;
+    best
 }
 
 
+#[allow(unused)]
 #[inline]
 /// Same as `tournament_selection_fast`, but return two individuls.
 /// Retry `n_retries` times if they point to the same individual.

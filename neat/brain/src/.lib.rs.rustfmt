@@ -1,0 +1,19 @@
+extern crate rand;
+extern crate petgraph;
+
+
+pub mod neuron;
+pub mod innovation;
+pub mod edge;
+pub mod phenotype;
+
+pub use edge::Edge;
+pub use innovation::Innovation;
+pub use neuron::{Neuron, NeuronType};
+pub use phenotype::Phenotype;
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {}
+}

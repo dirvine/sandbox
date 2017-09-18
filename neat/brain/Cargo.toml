@@ -1,0 +1,20 @@
+[package]
+authors = ["David Irvine <david.irvine@maidsafe.net>"]
+name = "brain"
+version = "0.1.0"
+
+[[bin]]
+name = "brain"
+path = "src/main.rs"
+
+[dependencies]
+num = "~0.1.40"
+petgraph = "~0.4.5"
+rand = "~0.3.16"
+rayon = "~0.8.2"
+serde = "~1.0.11"
+serde_derive = "~1.0.11"
+
+[lib]
+name = "brain"
+path = "src/lib.rs"
